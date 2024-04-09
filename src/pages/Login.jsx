@@ -18,7 +18,8 @@ const Login = () => {
     const loginHandler = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('https://visualizeai-server-production.up.railway.app/login', { username, password }, { withCredentials: true });
+            const response = await axios.post('http://localhost:3000/login', { username, password }, { withCredentials: true });
+            console.log('response = ',response)
             if (response.data.errors) {
                 const { username, password } = response.data.errors;
                 if (!username || !password) {

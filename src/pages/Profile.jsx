@@ -18,7 +18,7 @@ const Profile = () => {
                 navigate('/login');
             } else {
                 try {
-                    const response = await axios.post('https://visualizeai-server-production.up.railway.app/checkuser', {}, { withCredentials: true });
+                    const response = await axios.post('http://localhost:3000/checkuser', {}, { withCredentials: true });
                     // console.log("response: ", response);
                     getPost();
                     if (!response.data.status) {
@@ -37,7 +37,7 @@ const Profile = () => {
         };
         const getPost = async () => {
             try {
-                const response = await axios.post('https://visualizeai-server-production.up.railway.app/getPost', { profileUser });
+                const response = await axios.post('http://localhost:3000/getPost', { profileUser });
                 // console.log("response for profile = ", response.data.data);
                 const arr=response.data.data;
                 // console.log('arr = ',arr)
@@ -61,7 +61,7 @@ const Profile = () => {
     const toggleLiked = async (postId) => {
         try {
             // console.log("profile user = ", profileUser);
-            const response = await axios.post('https://visualizeai-server-production.up.railway.app/toggleLiked', { postId, profileUser }, { withCredentials: true });
+            const response = await axios.post('http://localhost:3000/toggleLiked', { postId, profileUser }, { withCredentials: true });
             // console.log("response from toggle liked: ", response.data.like);
             setLikedPosts(response.data.like)
             // console.log(likedPosts)
