@@ -15,27 +15,29 @@ const Login = () => {
         toast.error(error);
     };
 
+
     const loginHandler = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:3000/login', { username, password }, { withCredentials: true });
-            console.log('response = ',response)
+
             if (response.data.errors) {
                 const { username, password } = response.data.errors;
                 if (!username || !password) {
                     generateError("Check Username or Password");
                 } else {
-                    generateError(username || password);
+                    generateError(username || password); // More specific error messaging can be provided here
                 }
             } else {
                 setCheckuser(true);
+                localStorage.setItem('accessToken', response.data.accessToken); // Store access token in local storage for protected routes
                 navigate('/');
             }
         } catch (error) {
             console.error('Error occurred:', error);
+            // Handle network errors or server errors gracefully (e.g., display a generic error message)
         }
     };
-
     return (
         <div>
             <ToastContainer />
@@ -64,8 +66,8 @@ const Login = () => {
                         <div className="w-full py-6 flex justify-center items-center flex-col z-20">
                             <h1 className='text-6xl'>GenAI</h1>
                             <p
-                            onClick={()=>{navigate('/signup')}}
-                            className="text-gray-100 mt-3 text-xl">New ? Click to  <span className='text-[#007aff] cursor-pointer underline'>Create a New Account</span></p>
+                                onClick={() => { navigate('/signup') }}
+                                className="text-gray-100 mt-3 text-xl">New ? Click to  <span className='text-[#007aff] cursor-pointer underline'>Create a New Account</span></p>
                             <form action="" className=" mt-10 sm:w-2/3 w-full px-4 lg:px-0 mx-auto">
                                 <div className="pb-2 pt-4">
                                     <input
