@@ -20,7 +20,7 @@ const Login = () => {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:3000/login', { username, password }, { withCredentials: true });
-
+            console.log('response from login = ',response)
             if (response.data.errors) {
                 const { username, password } = response.data.errors;
                 if (!username || !password) {
