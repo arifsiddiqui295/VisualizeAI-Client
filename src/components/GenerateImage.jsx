@@ -18,7 +18,7 @@ const GenerateImage = () => {
 
         try {
             setLoading(true);
-            const response = await axios.post("http://localhost:3000/api/v1/dalle", { author, prompt, src });
+            const response = await axios.post("https://visualizeai-server-production.up.railway.app/api/v1/dalle", { author, prompt, src });
             setSrc(response.data.photo.data[0].url);
         } catch (error) {
             console.error("Error generating image:", error);
@@ -31,7 +31,7 @@ const GenerateImage = () => {
         // console.log(cookies.jwt);
         try {
 
-            const response = await axios.post('http://localhost:3000/imagePost', { user, prompt, src });
+            const response = await axios.post('https://visualizeai-server-production.up.railway.app/imagePost', { user, prompt, src });
             // console.log("response: ", response);
         } catch (error) {
             // console.error("Error fetching user:", error);
@@ -41,7 +41,7 @@ const GenerateImage = () => {
     };
     useEffect(() => {
         const getUsers = async () => {
-            const userResponse = await axios.post('http://localhost:3000/checkuser', {}, { withCredentials: true });
+            const userResponse = await axios.post('https://visualizeai-server-production.up.railway.app/checkuser', {}, { withCredentials: true });
             // console.log("userResponse: ", userResponse.data.user);
             setUser(userResponse.data.user);
             // console.log("user:", user);

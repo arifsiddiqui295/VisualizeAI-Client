@@ -27,7 +27,7 @@ const Navbar = () => {
                     setCheckuser(true);
                 } else {
                     // No cookie, proceed with verification request
-                    const response = await axios.post('http://localhost:3000/checkuser', {}, { withCredentials: true });
+                    const response = await axios.post('https://visualizeai-server-production.up.railway.app/checkuser', {}, { withCredentials: true });
                     // console.log("response from the navbar ", response.status)
                     if (!response.data.status) {
                         removeCookie('token');

@@ -16,7 +16,7 @@ const Signup = () => {
     const registerHandler = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/register', { username, email, password }, { withCredentials: true });
+            const response = await axios.post('https://visualizeai-server-production.up.railway.app/register', { username, email, password }, { withCredentials: true });
             console.log("response from register: ", response);
             if (response.data.errors) {
                 const { username, password } = response.data.errors;
