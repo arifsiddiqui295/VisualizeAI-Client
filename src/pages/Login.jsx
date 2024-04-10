@@ -14,12 +14,11 @@ const Login = () => {
     const generateError = (error) => {
         toast.error(error);
     };
-
-
     const loginHandler = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/login', { username, password }, { withCredentials: true });
+            console.log("heheheheh")
+            const response = await axios.post('https://visualizeai-server-production.up.railway.app/login', { username, password }, { withCredentials: true });
             console.log('response from login = ',response)
             if (response.data.errors) {
                 const { username, password } = response.data.errors;

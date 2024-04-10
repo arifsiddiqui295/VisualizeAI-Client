@@ -18,7 +18,7 @@ const Profile = () => {
                 navigate('/login');
             } else {
                 try {
-                    const response = await axios.post('http://localhost:3000/checkuser', {}, { withCredentials: true });
+                    const response = await axios.post('https://visualizeai-server-production.up.railway.app/checkuser', {}, { withCredentials: true });
                     // console.log("response: ", response);
                     getPost();
                     if (!response.data.status) {
@@ -37,7 +37,7 @@ const Profile = () => {
         };
         const getPost = async () => {
             try {
-                const response = await axios.post('http://localhost:3000/getPost', { profileUser });
+                const response = await axios.post('https://visualizeai-server-production.up.railway.app/getPost', { profileUser });
                 // console.log("response for profile = ", response.data.data);
                 const arr=response.data.data;
                 // console.log('arr = ',arr)

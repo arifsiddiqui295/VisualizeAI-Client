@@ -16,7 +16,7 @@ const CreatePost = () => {
             navigate('/login');
         } else {
             try {
-                const response = await axios.post('http://localhost:3000/checkuser', {}, { withCredentials: true });
+                const response = await axios.post('https://visualizeai-server-production.up.railway.app/checkuser', {}, { withCredentials: true });
                 // console.log("response: ", response);
                 if (!response.data.status) {
                     removeCookie('token');

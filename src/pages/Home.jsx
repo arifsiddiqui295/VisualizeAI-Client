@@ -36,10 +36,11 @@ const Home = () => {
   useEffect(() => {
     const getFeedPost = async () => {
       try {
-        const response = await axios.post('http://localhost:3000/getFeedPost');
-        // console.log("response = ", response.data.data);
+        const response = await axios.post('https://visualizeai-server-production.up.railway.app/getFeedPost');
+        console.log("response from home posts = ", response.data.data);
         const arr=response.data.data;
         arr.reverse()
+        console.log('reverse array = ', arr);
         setItem(arr);
       } catch (error) {
         console.error('Error occurred while fetching feed posts:', error);
@@ -56,7 +57,7 @@ const Home = () => {
       //  
       //   return;
       // }
-      const response = await axios.post('http://localhost:3000/toggleLiked', { postId, profileUser }, { withCredentials: true });
+      const response = await axios.post('https://visualizeai-server-production.up.railway.app/toggleLiked', { postId, profileUser }, { withCredentials: true });
       // console.log("response from toggle liked: ", response.data.message);
       if (response.data.message==='Unauthorized'){
         toast("You are not Logged In!");
