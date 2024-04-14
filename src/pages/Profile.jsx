@@ -61,7 +61,13 @@ const Profile = () => {
     const toggleLiked = async (postId) => {
         try {
             // console.log("profile user = ", profileUser);
-            const response = await axios.post('https://visualizeai-server-production.up.railway.app/toggleLiked', { postId, profileUser }, { withCredentials: true });
+            const token = localStorage.getItem('jwt');
+            const response = await axios.post('https://visualizeai-server-production.up.railway.app/toggleLiked', { postId, profileUser }, {
+                withCredentials: true,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             // console.log("response from toggle liked: ", response.data.like);
             setLikedPosts(response.data.like)
             // console.log(likedPosts)
