@@ -14,61 +14,48 @@ const Profile = () => {
     const [likedPosts, setLikedPosts] = useState([]);
     useEffect(() => {
         const verifyUser = async () => {
-            if (!cookies.jwt) {
-                navigate('/login');
-            } else {
-                try {
-                    const response = await axios.post('https://visualizeai-server-production.up.railway.app/checkuser', {}, { withCredentials: true });
-                    // console.log("response: ", response);
-                    getPost();
-                    if (!response.data.status) {
-                        removeCookie('token');
-                        navigate('/login');
-                    } else {
-                        setProfileUser(response.data.user); // Set profileUser state after successful authentication
-                        toast(`hi ${response.data.user}`, { theme: 'dark' });
-                    }
-                } catch (error) {
-                    console.error('Error occurred:', error);
-                    removeCookie('token');
-                    navigate('/login');
-                }
-            }
-        };
-        const getPost = async () => {
             try {
-                const response = await axios.post('https://visualizeai-server-production.up.railway.app/getPost', { profileUser });
-                // console.log("response for profile = ", response.data.data);
-                const arr=response.data.data;
-                // console.log('arr = ',arr)
-                arr.reverse()
-                // console.log('arr = ',arr)
-                setMapPost(arr); // Set mapUser state with the fetched posts
-                // console.log("mapPost: ", mapPost[0].photo);
+                const token = localStorage.getItem('jwt');
+                // console.log('token from checkuser nav =', token)
+                const response = await axios.post('https://visualizeai-server-production.up.railway.app/checkuser', {}, {
+                    withCredentials: true,
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                // console.log("response  =", response);
+                if (!response.data.status) {
+                    removeCookie('token');
+                    navigate('/');
+                } else {
+                    setProfileUser(response.data.user);
+                    // console.log('profile user1 =', response.data.user)
+                }
             } catch (error) {
-                // console.error('Error occurred while fetching posts:', error);
-                // Handle error appropriately, such as displaying a toast message or redirecting to an error page
+                console.error('Error occurred while verifying user:', error);
             }
-        };
-
+        };;
         verifyUser();
     }, [cookies, navigate, likedPosts, profileUser]);
-
-    const logout = () => {
-        removeCookie("jwt");
-        navigate('/login');
-    }
     const toggleLiked = async (postId) => {
         try {
-            // console.log("profile user = ", profileUser);
-            const response = await axios.post('https://visualizeai-server-production.up.railway.app/toggleLiked', { postId, profileUser }, { withCredentials: true });
-            // console.log("response from toggle liked: ", response.data.like);
-            setLikedPosts(response.data.like)
-            // console.log(likedPosts)
+          const token = localStorage.getItem('jwt');
+          const response = await axios.post('https://visualizeai-server-production.up.railway.app/toggleLiked', { postId, profileUser }, {
+            withCredentials: true,
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          console.log("response from toggle liked: ", response);
+          if (response.data.message === 'Unauthorized') {
+            toast("You are not Logged In!");
+          }
+          setLikedPosts(response.data.like)
+          // console.log(likedPosts)
         } catch (error) {
-            console.error('Error occurred while toggling like:', error);
+          console.error('Error occurred while toggling like:', error);
         }
-    };
+      };
     return (
         <div className='w-screen h-screen overflow-y-auto'>
             {/* <ToastContainer /> */}

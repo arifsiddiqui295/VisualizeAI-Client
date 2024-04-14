@@ -12,25 +12,26 @@ const CreatePost = () => {
 
   useEffect(() => {
     const verifyUser = async () => {
-        if (!cookies.jwt) {
-            navigate('/login');
+      try {
+        const token = localStorage.getItem('jwt');
+        // console.log('token from checkuser nav =', token)
+        const response = await axios.post('https://visualizeai-server-production.up.railway.app/checkuser', {}, {
+          withCredentials: true,
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        // console.log("response  =", response);
+        if (!response.data.status) {
+          removeCookie('token');
+          navigate('/');
         } else {
-            try {
-                const response = await axios.post('https://visualizeai-server-production.up.railway.app/checkuser', {}, { withCredentials: true });
-                // console.log("response: ", response);
-                if (!response.data.status) {
-                    removeCookie('token');
-                    navigate('/login');
-                } else {
-                    setProfileUser(response.data.user); // Set profileUser state after successful authentication
-                    toast(`hi ${response.data.user}`, { theme: 'dark' });
-                }
-            } catch (error) {
-                console.error('Error occurred:', error);
-                removeCookie('token');
-                navigate('/login');
-            }
+          setProfileUser(response.data.user);
+          // console.log('profile user1 =', response.data.user)
         }
+      } catch (error) {
+        console.error('Error occurred while verifying user:', error);
+      }
     };
     verifyUser();
 }, [cookies, navigate]);

@@ -76,7 +76,6 @@ const Home = () => {
       console.error('Error occurred while toggling like:', error);
     }
   };
-
   return (
     <Container>
       <ToastContainer
