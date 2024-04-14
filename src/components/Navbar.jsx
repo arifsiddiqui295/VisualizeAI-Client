@@ -21,28 +21,28 @@ const Navbar = () => {
     useEffect(() => {
         const verifyUser = async () => {
             try {
-                // Check for presence of jwt cookie
-                if (cookies.jwt) {
-                    setProfileUser(true); // Assuming true indicates logged in
-                    setCheckuser(true);
-                } else {
-                    // No cookie, proceed with verification request
-                    const response = await axios.post('https://visualizeai-server-production.up.railway.app/checkuser', {}, { withCredentials: true });
-                    // console.log("response from the navbar ", response.status)
-                    if (!response.data.status) {
-                        removeCookie('token');
-                        setCheckuser(false);
-                        navigate('/');
-                    } else {
-                        setProfileUser(response.data.user);
+                const token = localStorage.getItem('jwt');
+                // console.log('token from checkuser home =', token)
+                const response = await axios.post('https://visualizeai-server-production.up.railway.app/checkuser', {}, {
+                    withCredentials: true,
+                    headers: {
+                        'Authorization': `Bearer ${token}`
                     }
+                });
+                // console.log("response  =", response);
+                if (!response.data.status) {
+                    removeCookie('token');
+                    navigate('/');
+                } else {
+                    setProfileUser(response.data.user);
+                    console.log('profile user1 =', response.data.user)
                 }
             } catch (error) {
-                // console.log('Error occurred while verifying user:', error);
+                console.error('Error occurred while verifying user:', error);
             }
         };
         verifyUser();
-    }, [cookies, removeCookie, setCheckuser,setProfileUser]);
+    }, [cookies, removeCookie, setCheckuser, setProfileUser]);
     const [menuOpen, setMenuOpen] = useState(false);
 
     const handleMenuToggle = () => {
@@ -61,13 +61,19 @@ const Navbar = () => {
         setMenuOpen(!menuOpen);
     }
     const logouthandeler = () => {
+        // Update frontend state
         setMenuOpen(!menuOpen);
-        // console.log('logouthandeler')
-        removeCookie('jwt');
         setCheckuser(false);
-        setProfileUser(false)
-        // console.log('check user = ',checkUser)
-        // console.log(checkUser)
+        setProfileUser(false);
+
+        // Clear token from localStorage
+        localStorage.removeItem('jwt');
+
+        // Clear token from cookies if applicable
+        removeCookie('jwt'); // Use the appropriate function to remove the cookie
+
+        // Optional: Redirect the user to the login page or another page
+        navigate('/login'); // If you're using React Router, navigate to the login page
     }
     const profileHandler = () => {
         setMenuOpen(!menuOpen);

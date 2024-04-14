@@ -18,13 +18,21 @@ const Home = () => {
   useEffect(() => {
     const verifyUser = async () => {
       try {
-        const response = await axios.post('https://visualizeai-server-production.up.railway.app/checkuser', {}, { withCredentials: true });
-        console.log("response  =", response);
+        const token = localStorage.getItem('jwt');
+        // console.log('token from checkuser nav =', token)
+        const response = await axios.post('https://visualizeai-server-production.up.railway.app/checkuser', {}, {
+          withCredentials: true,
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        // console.log("response  =", response);
         if (!response.data.status) {
           removeCookie('token');
           navigate('/');
         } else {
           setProfileUser(response.data.user);
+          // console.log('profile user1 =', response.data.user)
         }
       } catch (error) {
         console.error('Error occurred while verifying user:', error);
@@ -37,10 +45,10 @@ const Home = () => {
     const getFeedPost = async () => {
       try {
         const response = await axios.post('https://visualizeai-server-production.up.railway.app/getFeedPost');
-        console.log("response from home posts = ", response.data.data);
-        const arr=response.data.data;
+        // console.log("response from home posts = ", response.data.data);
+        const arr = response.data.data;
         arr.reverse()
-        console.log('reverse array = ', arr);
+        // console.log('reverse array = ', arr);
         setItem(arr);
       } catch (error) {
         console.error('Error occurred while fetching feed posts:', error);
@@ -51,15 +59,15 @@ const Home = () => {
 
   const toggleLiked = async (postId) => {
     try {
-      // console.log("profile user = ", profileUser);
-      // if (!profileUser) {
-      //   // setToastBox(false)
-      //  
-      //   return;
-      // }
-      const response = await axios.post('https://visualizeai-server-production.up.railway.app/toggleLiked', { postId, profileUser }, { withCredentials: true });
-      // console.log("response from toggle liked: ", response.data.message);
-      if (response.data.message==='Unauthorized'){
+      const token = localStorage.getItem('jwt');
+      const response = await axios.post('https://visualizeai-server-production.up.railway.app/toggleLiked', { postId, profileUser }, {
+        withCredentials: true,
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      console.log("response from toggle liked: ", response);
+      if (response.data.message === 'Unauthorized') {
         toast("You are not Logged In!");
       }
       setLikedPosts(response.data.like)
@@ -73,7 +81,7 @@ const Home = () => {
     <Container>
       <ToastContainer
         className="sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 fixed top-10 right-10 p-2"
-        // Additional props as needed
+      // Additional props as needed
       />
       {/* // console.log('toastbox',toastBox) */}
       <HeadLine>

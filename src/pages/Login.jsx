@@ -19,7 +19,9 @@ const Login = () => {
         try {
             console.log("heheheheh")
             const response = await axios.post('https://visualizeai-server-production.up.railway.app/login', { username, password }, { withCredentials: true });
-            console.log('response from login = ',response)
+            console.log('response from login = ',response.data)
+            console.log('response from login1 = ',response.data)
+            console.log('response from login2 = ',response.data.token)
             if (response.data.errors) {
                 const { username, password } = response.data.errors;
                 if (!username || !password) {
@@ -29,7 +31,14 @@ const Login = () => {
                 }
             } else {
                 setCheckuser(true);
-                localStorage.setItem('accessToken', response.data.accessToken); // Store access token in local storage for protected routes
+                localStorage.setItem('jwt', response.data.token);
+                // Function to retrieve the token from localStorage
+                const getAccessToken = () => {
+                  return localStorage.getItem('accessToken');
+                };
+                // Example usage of sending the token in another request
+                const token = getAccessToken();
+                console.log('token  from login handler = ',token)
                 navigate('/');
             }
         } catch (error) {
