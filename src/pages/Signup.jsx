@@ -2,9 +2,11 @@ import React from 'react'
 import { useState } from 'react'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; 
+import 'react-toastify/dist/ReactToastify.css';
 import { Navigate, useNavigate } from 'react-router-dom'
+import { useCheckUser } from '../contexts/CheckUserContext';
 const Signup = () => {
+    const { setCheckuser } = useCheckUser();
     const navigate = useNavigate()
     const [email, setEmail] = useState('')
     const [username, setUsername] = useState('')
@@ -17,31 +19,32 @@ const Signup = () => {
         e.preventDefault();
         try {
             const response = await axios.post('https://visualizeai-server-production.up.railway.app/register', { username, email, password }, { withCredentials: true });
-            console.log("response from register: ", response);
+            console.log("response from register: ", response.data.token);
             if (response.data.errors) {
                 const { username, password } = response.data.errors;
                 if (!username) {
                     generateError("Check Username or Password ");
-                } 
-                else{
+                }
+                else {
                     generateError(username)
                 }
             } else {
+                setCheckuser(true);
                 localStorage.setItem('jwt', response.data.token);
                 // Function to retrieve the token from localStorage
                 const getAccessToken = () => {
-                  return localStorage.getItem('accessToken');
+                    return localStorage.getItem('jwt');
                 };
                 // Example usage of sending the token in another request
                 const token = getAccessToken();
-                console.log('token  from login handler = ',token)
-                navigate('/profile');
+                console.log('token  from signup handler = ', token)
+                navigate('/');
             }
         } catch (error) {
             console.error('Error occurred:', error);
         }
     }
-    
+
     return (
         <div>
             <ToastContainer />
@@ -81,8 +84,8 @@ const Signup = () => {
                                 </span>
                             </div> */}
                             <p
-                             onClick={()=>{navigate('/login')}}
-                            className="text-gray-100 mt-10 mb-10 text-xl">Already a customer? Click for  <span className='text-[#007aff] cursor-pointer underline'>Login</span></p>
+                                onClick={() => { navigate('/login') }}
+                                className="text-gray-100 mt-10 mb-10 text-xl">Already a customer? Click for  <span className='text-[#007aff] cursor-pointer underline'>Login</span></p>
                             <form action="" className="sm:w-2/3 w-full px-4 lg:px-0 mx-auto">
                                 <div className="pb-2 pt-4">
                                     <input

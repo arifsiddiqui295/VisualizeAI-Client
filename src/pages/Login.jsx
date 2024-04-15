@@ -34,7 +34,7 @@ const Login = () => {
                 localStorage.setItem('jwt', response.data.token);
                 // Function to retrieve the token from localStorage
                 const getAccessToken = () => {
-                  return localStorage.getItem('accessToken');
+                  return localStorage.getItem('jwt');
                 };
                 // Example usage of sending the token in another request
                 const token = getAccessToken();
