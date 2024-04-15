@@ -41,8 +41,15 @@ const GenerateImage = () => {
     };
     useEffect(() => {
         const getUsers = async () => {
-            const userResponse = await axios.post('https://visualizeai-server-production.up.railway.app/checkuser', {}, { withCredentials: true });
-            // console.log("userResponse: ", userResponse.data.user);
+            const token = localStorage.getItem('jwt');
+            // console.log('token from checkuser home =', token)
+            const response = await axios.post('https://visualizeai-server-production.up.railway.app/checkuser', {}, {
+                withCredentials: true,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            console.log("userResponse: ", response);
             setUser(userResponse.data.user);
             // console.log("user:", user);
         }
@@ -104,7 +111,6 @@ const GenerateImage = () => {
                 </div>
             </div>
         </div>
-
     );
 }
 

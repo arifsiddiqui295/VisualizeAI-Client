@@ -27,6 +27,14 @@ const Signup = () => {
                     generateError(username)
                 }
             } else {
+                localStorage.setItem('jwt', response.data.token);
+                // Function to retrieve the token from localStorage
+                const getAccessToken = () => {
+                  return localStorage.getItem('accessToken');
+                };
+                // Example usage of sending the token in another request
+                const token = getAccessToken();
+                console.log('token  from login handler = ',token)
                 navigate('/profile');
             }
         } catch (error) {
