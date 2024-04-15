@@ -50,7 +50,7 @@ const GenerateImage = () => {
                 }
             });
             console.log("userResponse: ", response);
-            setUser(userResponse.data.user);
+            setUser(response.data.user);
             // console.log("user:", user);
         }
         getUsers();
