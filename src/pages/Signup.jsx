@@ -3,14 +3,19 @@ import { useState } from 'react'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Navigate, useNavigate } from 'react-router-dom'
+import {useNavigate } from 'react-router-dom'
 import { useCheckUser } from '../contexts/CheckUserContext';
+import CircularProgress from '@mui/material/CircularProgress';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 const Signup = () => {
     const { setCheckuser } = useCheckUser();
     const navigate = useNavigate()
     const [email, setEmail] = useState('')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(true);
 
     const generateError = (error) => {
         toast.error(error);
@@ -38,7 +43,11 @@ const Signup = () => {
                 // Example usage of sending the token in another request
                 const token = getAccessToken();
                 console.log('token  from signup handler = ', token)
-                navigate('/');
+                setLoading(true)
+                setTimeout(() => {
+                    navigate('/');
+                    // setLoading(false)
+                }, 0)
             }
         } catch (error) {
             console.error('Error occurred:', error);
@@ -49,6 +58,7 @@ const Signup = () => {
         <div>
             <ToastContainer />
             <>
+                {/* <Loader /> */}
                 <section className="min-h-screen flex items-stretch text-white ">
                     <div
                         className="lg:flex w-1/2 hidden bg-no-repeat bg-cover relative items-center"
@@ -107,21 +117,40 @@ const Signup = () => {
                                         className="block w-full p-4 text-lg rounded-xl bg-black"
                                     />
                                 </div>
-                                <div className="pb-2 pt-4">
+                                <div className="pb-2 pt-4 flex relative">
                                     <input
-                                        className="block w-full p-4 text-lg rounded-xl bg-black"
-                                        type="password"
+                                        className="block w-full p-4 pr-12 text-lg rounded-xl bg-black"
+                                        type={showPassword ? 'password' : 'text'}
                                         id="password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         placeholder="Password"
                                     />
+                                    {
+                                        showPassword ? (
+                                            <div
+                                                onClick={() => { setShowPassword(!showPassword) }}
+                                            >
+                                                <VisibilityIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer" />
+                                            </div>
+                                        ) : (
+                                            <div
+                                                onClick={() => { setShowPassword(!showPassword) }}
+                                            >
+                                                <VisibilityOffIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer" />
+                                            </div>
+                                        )
+                                    }
                                 </div>
                                 <div className="px-4 pb-2 pt-4">
                                     <button
                                         onClick={registerHandler}
                                         className="uppercase block w-full p-4 text-lg rounded-xl bg-indigo-500 hover:bg-indigo-600 focus:outline-none">
-                                        sign up
+                                        {
+                                            loading ? <CircularProgress
+                                                style={{ color: "inherit", width: "20px", height: "20px" }}
+                                            /> : 'Sign up'
+                                        }
                                     </button>
                                 </div>
                             </form>

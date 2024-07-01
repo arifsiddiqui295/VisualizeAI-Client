@@ -9,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios'
 import { useCookies } from 'react-cookie'
+import Loader from '../components/Loader';
 const Home = () => {
   const [cookies, setCookie, removeCookie] = useCookies([]);
   const navigate = useNavigate();
@@ -82,6 +83,7 @@ const Home = () => {
         className="sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 fixed top-10 right-10 p-2"
       // Additional props as needed
       />
+      <Loader />
       {/* // console.log('toastbox',toastBox) */}
       <HeadLine>
         Explore popular posts in the Community

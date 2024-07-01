@@ -11,13 +11,18 @@ import axios from 'axios';
 import CloseIcon from '@mui/icons-material/Close';
 import '../CSS/Navbar.css'
 import AddIcon from '@mui/icons-material/Add';
+import Loader from './Loader';
 const Navbar = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [cookies, setCookie, removeCookie] = useCookies([])
     const path = location.pathname.split('/');
     const [profileUser, setProfileUser] = useState();
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
     const { checkUser, setCheckuser } = useCheckUser();
+
+
     useEffect(() => {
         const verifyUser = async () => {
             try {
@@ -43,49 +48,81 @@ const Navbar = () => {
         };
         verifyUser();
     }, [cookies, removeCookie, setCheckuser, setProfileUser]);
-    const [menuOpen, setMenuOpen] = useState(false);
 
     const handleMenuToggle = () => {
         setMenuOpen(!menuOpen);
     };
+    const homeHandler=()=>{
+        setLoading(true);
+        setTimeout(() => {
+            navigate('/');
+            setMenuOpen(!menuOpen);
+            setLoading(false);
+        }, 0);
+    }
     const loginhandeler = () => {
-        navigate('/login');
-        setMenuOpen(!menuOpen);
+        setLoading(true);
+        setTimeout(() => {
+            navigate('/login');
+            setMenuOpen(!menuOpen);
+            setLoading(false);
+        }, 0);
     }
     const signUphandeler = () => {
-        navigate('/signup');
-        setMenuOpen(!menuOpen);
+        setLoading(true);
+        setTimeout(() => {
+            navigate('/signup');
+            setMenuOpen(!menuOpen);
+            setLoading(false);
+        }, 0);
     }
     const posthandeler = () => {
-        navigate('/post');
-        setMenuOpen(!menuOpen);
+        setLoading(true);
+        setTimeout(() => {
+            navigate('/post');
+            setMenuOpen(!menuOpen);
+            setLoading(false);
+        }, 0);
     }
     const logouthandeler = () => {
         // Update frontend state
-        setMenuOpen(!menuOpen);
-        setCheckuser(false);
-        setProfileUser(false);
+        setLoading(true);
+        setTimeout(() => {
+            setMenuOpen(!menuOpen);
+            setCheckuser(false);
+            setProfileUser(false);
 
-        // Clear token from localStorage
-        localStorage.removeItem('jwt');
+            // Clear token from localStorage
+            localStorage.removeItem('jwt');
 
-        // Clear token from cookies if applicable
-        removeCookie('jwt'); // Use the appropriate function to remove the cookie
+            // Clear token from cookies if applicable
+            removeCookie('jwt'); // Use the appropriate function to remove the cookie
 
-        // Optional: Redirect the user to the login page or another page
-        navigate('/login'); // If you're using React Router, navigate to the login page
+            // Optional: Redirect the user to the login page or another page
+            navigate('/login');
+            setLoading(false);
+        }, 0);
+        // If you're using React Router, navigate to the login page
     }
     const profileHandler = () => {
-        setMenuOpen(!menuOpen);
-        navigate('/profile')
+        setLoading(true);
+        setTimeout(() => {
+            setMenuOpen(!menuOpen);
+            navigate('/profile')
+            setLoading(false);
+        }, 0);
+
     }
     return (
         <Container>
-            <p onClick={() => { navigate('/') }} className="cursor-pointer text-4xl"
+            <p onClick={homeHandler} className="cursor-pointer text-4xl"
                 style={{
                     fontWeight: '500'
                 }}
             >Visualize<span className='text-blue-400'>AI</span></p>
+             {loading && (
+                <Loader />
+            )}
             {checkUser || profileUser ? (
                 <div>
                     <div className='nav gap-7'>
